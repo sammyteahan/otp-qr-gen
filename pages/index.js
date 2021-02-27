@@ -1,65 +1,72 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { useState } from 'react';
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
 
-export default function Home() {
+function Home() {
+  const [otpUri, setOtpUri] = useState('');
+  const [qrCode, setQrCode] = useState(null);
+  const [fetching, setFetching] = useState(false);
+  const [fetchError, setFetchingError] = useState(null);
+
+  const clear = () => {
+    setOtpUri('');
+    setFetchingError(null);
+    setQrCode(null);
+  };
+
+  const submit = async (evt) => {
+    evt.preventDefault();
+
+    try {
+      setFetching(true);
+      const response = await fetch('/api/qr', {
+        body: JSON.stringify({ uri: otpUri }),
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+      });
+
+      const { qrCode }= await response.json();
+      setQrCode(qrCode);
+    } catch (err) {
+      setFetchingError(err);
+    } finally {
+      setFetching(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>OTP QR Code generator</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          OTP QR Code Generator
         </h1>
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+        <input
+          value={otpUri}
+          type="text"
+          className={styles.input}
+          onChange={evt => setOtpUri(evt.target.value)}
+        />
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+        <button onClick={submit} className={styles.submit} disabled={fetching}>
+          Submit
+        </button>
+        
+        <button onClick={clear} className={styles.submit} disabled={fetching}>
+          Clear
+        </button>
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+        {qrCode && (
+          <img src={qrCode} />
+        )}
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
     </div>
   )
 }
+
+export { Home as default };
