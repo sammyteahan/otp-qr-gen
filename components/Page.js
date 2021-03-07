@@ -4,14 +4,10 @@ import Header from './Header';
 
 const GlobalStyles = createGlobalStyle`
   html {
+    --yellow: #fff200;
+    --steel: #4b4b4b;
     --black: #393939;
     --white: #ededed;
-    --steel: #4b4b4b;
-    --steelDark: #3d3d3d;
-    --yellow: #fff200;
-    --danger: #ff4d4d;
-    --neonBlue: #18dcff;
-    --emerald: #3ae374;
     --maxWidth: 1000px;
     box-sizing: border-box;
     height: 100%;
