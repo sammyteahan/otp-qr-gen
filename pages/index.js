@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import styles from '../styles/Home.module.css';
+import styled from 'styled-components';
+
+import { Input, PrimaryButton, SecondaryButton } from '../components/common';
 
 function Home() {
   const [otpUri, setOtpUri] = useState('');
@@ -35,38 +37,56 @@ function Home() {
   };
 
   return (
-    <div className={styles.container}>
+    <>
       <Head>
-        <title>OTP QR Code generator</title>
+        <title>QR Generator</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          OTP QR Code Generator
-        </h1>
+      <HomeContainer>
+        <FormContainer>
+          <Input
+            value={otpUri}
+            type="text"
+            onChange={evt => setOtpUri(evt.target.value)}
+          />
+          <PrimaryButton onClick={submit} disabled={fetching}>
+            Submit
+          </PrimaryButton>
 
-        <input
-          value={otpUri}
-          type="text"
-          className={styles.input}
-          onChange={evt => setOtpUri(evt.target.value)}
-        />
-
-        <button onClick={submit} className={styles.submit} disabled={fetching}>
-          Submit
-        </button>
-        
-        <button onClick={clear} className={styles.submit} disabled={fetching}>
-          Clear
-        </button>
-
-        {qrCode && (
-          <img src={qrCode} />
-        )}
-      </main>
-    </div>
-  )
+          <SecondaryButton onClick={clear} disabled={fetching}>
+            Clear
+          </SecondaryButton>
+        </FormContainer>
+        <QRContainer>
+          {qrCode && (
+            <img src={qrCode} />
+          )}
+        </QRContainer>
+      </HomeContainer>
+    </>
+  );
 }
+
+const HomeContainer = styled.main`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+`;
+
+const FormContainer = styled.div`
+  padding: 2rem;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: 1fr auto auto;
+  grid-gap: 10px;
+`;
+
+const QRContainer = styled.div`
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  background: var(--steel);
+`;
 
 export { Home as default };
