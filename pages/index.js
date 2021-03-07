@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
 
+import { Input, PrimaryButton, SecondaryButton } from '../components/common';
+
 function Home() {
   const [otpUri, setOtpUri] = useState('');
   const [qrCode, setQrCode] = useState(null);
@@ -80,37 +82,11 @@ const FormContainer = styled.div`
   grid-gap: 10px;
 `;
 
-const BaseButton = styled.button`
-  padding: 1rem 1.5rem;
-  border-radius: 3px;
-  font-size: 1rem;
-`;
-
-const PrimaryButton = styled(BaseButton)`
-  background: var(--yellow);
-  border: 2px solid var(--yellow);
-`;
-
-const SecondaryButton = styled(BaseButton)`
-  background: var(--steel);
-  border: 2px solid var(--steel);
-  color: var(--white);
-`;
-
 const QRContainer = styled.div`
   display: grid;
   justify-items: center;
   align-items: center;
   background: var(--steel);
-`;
-
-const Input = styled.input.attrs({
-  type: 'text',
-})`
-  padding: 1rem;
-  border: 2px solid var(--black);
-  border-radius: 0.1875rem;
-  width: 100%;
 `;
 
 export { Home as default };
